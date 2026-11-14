@@ -1,0 +1,11 @@
+{
+  "name": "migration-exercise",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.0"
+  }
+}

@@ -1,0 +1,23 @@
+/* Legacy brand colour was #1a73e8. Comments must not change. */
+:root { --legacy-spacing: 8px; }
+
+#header { margin: 0; }
+#bad { padding: 0; }
+
+.btn-primary {
+  color: #FFF;
+  background: #1A73E8;
+  border: 1px solid #1a73e8;
+}
+
+.btn-danger { background-color: #d93025 !important; color: #ffffff; }
+
+.card {
+  border: 1px solid #DADCE0;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  background: linear-gradient(#fff, #f1f3f4);
+}
+
+.badge { color: #1a73e8cc; background: #FF6D00; }
+
+.icon { fill: #34A853; stroke: url(#gradient); }
