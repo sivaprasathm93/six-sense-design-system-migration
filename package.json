@@ -1,11 +1,23 @@
 {
   "name": "migration-exercise",
+  "description": "Design-system migration exercise with a safe Button codemod and token-color checks.",
   "private": true,
   "version": "1.0.0",
+  "engines": {
+    "node": ">=18"
+  },
   "scripts": {
-    "typecheck": "tsc -p tsconfig.json"
+    "typecheck": "tsc -p tsconfig.json",
+    "test": "node --test codemods/test/migrate-design-system.test.cjs",
+    "migrate:dry-run": "node codemods/migrate-design-system.cjs --dry-run",
+    "migrate": "node codemods/migrate-design-system.cjs --write",
+    "tokens:css": "node codemods/emit-token-layer.cjs",
+    "tokens:check": "node codemods/emit-token-layer.cjs --check",
+    "lint:colors": "node codemods/lint-colors.cjs",
+    "check": "npm run test && npm run tokens:check && npm run lint:colors && npm run typecheck"
   },
   "devDependencies": {
+    "@types/react": "^19.3.0",
     "typescript": "^5.4.0"
   }
 }

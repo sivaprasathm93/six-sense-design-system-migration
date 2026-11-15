@@ -1,17 +1,17 @@
 import * as React from 'react';
-import { Button, ButtonProps } from '@old/ui';
+import { Button, ButtonProps } from '@acme/ds';
 
 interface Props {
   destructive: boolean;
-  tone?: ButtonProps['variant'];
+  tone?: ButtonProps['intent'];
   onConfirm: () => void;
 }
 
 export const ConfirmDialog: React.FC<Props> = ({ destructive, tone, onConfirm }) => (
   <div>
-    <Button variant={destructive ? 'danger' : 'primary'} onClick={onConfirm}>
+    <Button intent={destructive ? 'critical' : 'brand'} onClick={onConfirm}>
       Confirm
     </Button>
-    <Button variant={tone}>Other</Button>
+    <Button intent={tone}>Other</Button>
   </div>
 );

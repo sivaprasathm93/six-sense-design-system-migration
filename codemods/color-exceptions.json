@@ -1,0 +1,23 @@
+[
+  {
+    "file": "apps/web-dashboard/src/styles/chartColors.ts",
+    "value": "#FF6D00",
+    "context": "variable:series",
+    "maxOccurrences": 1,
+    "reason": "No primitive token matches; design review required."
+  },
+  {
+    "file": "apps/web-dashboard/src/styles/theme.css",
+    "value": "#1a73e8cc",
+    "context": "property:color",
+    "maxOccurrences": 1,
+    "reason": "Alpha colors have no matching primitive token."
+  },
+  {
+    "file": "apps/web-dashboard/src/styles/theme.css",
+    "value": "#FF6D00",
+    "context": "property:background",
+    "maxOccurrences": 1,
+    "reason": "No primitive token matches; design review required."
+  }
+]

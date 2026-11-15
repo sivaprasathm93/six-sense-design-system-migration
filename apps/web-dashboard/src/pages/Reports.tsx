@@ -1,10 +1,9 @@
 import * as React from 'react';
-import { Badge } from '@acme/ds';
-import { Button } from '@old/ui';
+import { Badge, Button } from '@acme/ds';
 
 export const Reports: React.FC = () => (
   <div>
     <Badge>New</Badge>
-    <Button variant="secondary" size="lg">Export</Button>
+    <Button intent="neutral" size="large">Export</Button>
   </div>
 );

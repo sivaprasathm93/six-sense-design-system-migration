@@ -1,11 +1,11 @@
 import React from 'react';
-import { Button } from '@old/ui';
+import { Button } from '@acme/ds';
 
 export function Toolbar({ onRefresh }) {
   return (
     <div className="toolbar">
       {/* Button variant="primary" is documented in the design guide; leave this comment alone */}
-      <Button variant="primary" size="sm" onClick={onRefresh}>Refresh</Button>
+      <Button intent="brand" size="small" onClick={onRefresh}>Refresh</Button>
     </div>
   );
 }

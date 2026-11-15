@@ -5,19 +5,21 @@
 #bad { padding: 0; }
 
 .btn-primary {
-  color: #FFF;
-  background: #1A73E8;
-  border: 1px solid #1a73e8;
+  color: var(--color-white);
+  background: var(--color-blue-500);
+  border: 1px solid var(--color-blue-500);
 }
 
-.btn-danger { background-color: #d93025 !important; color: #ffffff; }
+.btn-danger { background-color: var(--color-red-500) !important; color: var(--color-white); }
 
 .card {
-  border: 1px solid #DADCE0;
+  border: 1px solid var(--color-gray-300);
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-  background: linear-gradient(#fff, #f1f3f4);
+  background: linear-gradient(var(--color-white), var(--color-gray-100));
 }
 
+/* TODO(ds-migration) unsupported-alpha `#1a73e8cc`: No primitive token matches alpha-bearing colors. Left unchanged: pick the intended token, or add one for this value, before clearing this item. See report/REPORT.md. */
+/* TODO(ds-migration) unmatched `#FF6D00`: No primitive token exactly matches this color. Left unchanged: pick the intended token, or add one for this value, before clearing this item. See report/REPORT.md. */
 .badge { color: #1a73e8cc; background: #FF6D00; }
 
-.icon { fill: #34A853; stroke: url(#gradient); }
+.icon { fill: var(--color-green-500); stroke: url(#gradient); }

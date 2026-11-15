@@ -1,0 +1,8 @@
+/* Keep #1a73e8 in this comment. */
+#bad { padding: 0; }
+.sample {
+  color: #FFF;
+  background: linear-gradient(#fff, #f1f3f4);
+  fill: #34A853;
+  stroke: url(#gradient);
+}
