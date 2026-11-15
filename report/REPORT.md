@@ -20,8 +20,8 @@ Target: `apps/web-dashboard/src`
 - `apps/web-dashboard/src/styles/chartColors.ts:3` **js-token-reference** `chartColors` (variable:chartColors): Token references here only resolve in CSS or style attributes; confirm no consumer parses these values itself (canvas, chart library, SVG attribute).
 - `apps/web-dashboard/src/styles/chartColors.ts:11` **js-token-reference** `series` (variable:series): Token references here only resolve in CSS or style attributes; confirm no consumer parses these values itself (canvas, chart library, SVG attribute).
 - `apps/web-dashboard/src/styles/chartColors.ts:14` **js-token-reference** `cardBorder` (variable:cardBorder): Token references here only resolve in CSS or style attributes; confirm no consumer parses these values itself (canvas, chart library, SVG attribute).
-- `apps/web-dashboard/src/styles/theme.css:23` **unsupported-alpha** `#1a73e8cc` (property:color): No primitive token matches alpha-bearing colors. Left unchanged: pick the intended token, or add one for this value, before clearing this item.
-- `apps/web-dashboard/src/styles/theme.css:23` **unmatched** `#FF6D00` (property:background): No primitive token exactly matches this color. Left unchanged: pick the intended token, or add one for this value, before clearing this item.
+- `apps/web-dashboard/src/styles/theme.css:25` **unsupported-alpha** `#1a73e8cc` (property:color): No primitive token matches alpha-bearing colors. Left unchanged: pick the intended token, or add one for this value, before clearing this item.
+- `apps/web-dashboard/src/styles/theme.css:25` **unmatched** `#FF6D00` (property:background): No primitive token exactly matches this color. Left unchanged: pick the intended token, or add one for this value, before clearing this item.
 
 ## Verification
 

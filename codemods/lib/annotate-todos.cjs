@@ -160,7 +160,11 @@ function collectTodoEdits({ filePath, text, sourceFile, report, edits = [] }) {
         : `// ${body}`;
 
     if (!groups.has(lineStart)) groups.set(lineStart, []);
-    groups.get(lineStart).push(comment);
+    // Two flags can share a line, a category and a value -- the same color
+    // twice in one declaration. They are one item to act on, so they get one
+    // marker rather than two byte-identical comments.
+    const comments = groups.get(lineStart);
+    if (!comments.includes(comment)) comments.push(comment);
   }
 
   return [...groups].map(([lineStart, comments]) => ({

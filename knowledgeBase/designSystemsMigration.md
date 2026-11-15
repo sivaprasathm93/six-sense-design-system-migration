@@ -199,5 +199,6 @@ interpreting these results.
 
 ## Supporting documentation
 
+- [PLAN.md](../PLAN.md) -- codemod sequence and the ten-app, eight-team rollout.
 - [README.md](../README.md) -- commands, review markers, color enforcement.
 - [.claude.md](../.claude.md) -- repository editing constraints.

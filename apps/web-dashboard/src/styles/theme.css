@@ -1,4 +1,6 @@
 /* Legacy brand colour was #1a73e8. Comments must not change. */
+@import './tokens.generated.css';
+
 :root { --legacy-spacing: 8px; }
 
 #header { margin: 0; }

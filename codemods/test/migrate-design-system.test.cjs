@@ -380,6 +380,19 @@ test('every token referenced by the migrated app is declared in the token layer'
   assert.deepEqual([...referenced].filter((token) => !declared.has(token)), []);
 });
 
+test('the generated token layer is imported by a stylesheet in the app', () => {
+  const layer = 'tokens.generated.css';
+  const importsLayer = /@import[^;]*tokens[.]generated[.]css/;
+  const importers = walkFiles(path.join(root, 'apps/web-dashboard/src'))
+    .filter((file) => file.endsWith('.css'))
+    .filter((file) => importsLayer.test(fs.readFileSync(file, 'utf8')));
+
+  // An undeclared custom property makes the whole declaration invalid at
+  // computed-value time, so a layer nothing imports is a layer that silently
+  // un-styles every migrated color while every other check stays green.
+  assert.ok(importers.length > 0, `no stylesheet imports ${layer}`);
+});
+
 test('flags alpha-bearing colors as unsupported and leaves the value untouched', () => {
   const input = `export const chartColors = { brand: '#1a73e8cc' };\n`;
   const transformed = transform('alpha.ts', input);

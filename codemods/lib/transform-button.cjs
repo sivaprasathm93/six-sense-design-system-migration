@@ -30,6 +30,16 @@ const {
  * name collision is left untouched and flagged for a human.
  */
 
+/**
+ * Looks a value up in a mapping table, treating only the table's own keys as
+ * mappings. A plain object inherits `constructor`, `toString` and friends, so
+ * a bare `map[value]` would turn `size="toString"` into a mapping and write a
+ * function's source into the file.
+ */
+function mappingFor(map, key) {
+  return Object.prototype.hasOwnProperty.call(map, key) ? map[key] : undefined;
+}
+
 /** The only `@old/ui` exports this migration moves. Card and Modal stay put. */
 const MIGRATED_EXPORTS = new Set(['Button', 'ButtonProps']);
 
@@ -246,6 +256,9 @@ function splitLegacyImports(ctx, plan) {
 
     const moved = [];
     const retained = [];
+    // Specifiers removed from the legacy import without anything to add for
+    // them, because the new package already provides that local name.
+    let dropped = 0;
     for (const specifier of specifiers) {
       const imported = getImportedName(specifier);
       const local = specifier.name.text;
@@ -255,12 +268,18 @@ function splitLegacyImports(ctx, plan) {
       }
       const targetLocal = bindings.localRenames.get(local) || local;
       // Already available from the new package: drop it rather than duplicate it.
-      if (bindings.existingNewBindings.get(targetLocal) === imported) continue;
+      if (bindings.existingNewBindings.get(targetLocal) === imported) {
+        dropped += 1;
+        continue;
+      }
       moved.push(imported === 'Button' && targetLocal === CANONICAL_LOCAL
         ? CANONICAL_LOCAL
         : specifier.getText(sourceFile));
     }
-    if (!moved.length) continue;
+    // Nothing moved and nothing dropped: this import has no migrated
+    // specifier at all. Anything dropped still has to leave the legacy
+    // import, or its references are renamed while the dead specifier stays.
+    if (!moved.length && !dropped) continue;
 
     const style = importStyle(ctx, declaration);
     const remainder = retained.length || clause.name
@@ -462,7 +481,7 @@ function resolveLegacyTag(ctx, plan, tagName) {
  */
 function mapLiteralValue(ctx, plan, literal, { map, unknown }) {
   const { sourceFile, relativePath, report } = ctx;
-  const mapped = map[literal.text];
+  const mapped = mappingFor(map, literal.text);
   if (!mapped) {
     addFlag(report, sourceFile, relativePath, literal.getStart(sourceFile), unknown,
       `Value "${literal.text}" has no safe mapping; the prop and its value were left unchanged.`, literal.text);
@@ -587,7 +606,7 @@ function rewriteAttributes(ctx, plan, node) {
 /** Rewrites `ButtonProps['variant']` to `ButtonProps['intent']`. */
 function rewriteButtonPropsLookup(ctx, plan, node) {
   const literal = node.indexType.literal;
-  const mapped = PROP_MAP[literal.text] || literal.text;
+  const mapped = mappingFor(PROP_MAP, literal.text) || literal.text;
   if (mapped === literal.text) return;
 
   plan.edits.push({
@@ -609,7 +628,7 @@ function collectSafeDynamicProps(ctx, plan) {
 
   (function visit(node) {
     if (isButtonPropsLookup(node, plan.buttonPropsLocals)) {
-      const target = sets[node.indexType.literal.text];
+      const target = mappingFor(sets, node.indexType.literal.text);
       const owner = node.parent;
       if (target && ts.isPropertySignature(owner) && owner.type === node) {
         const member = propertyName(owner.name);
@@ -618,6 +637,49 @@ function collectSafeDynamicProps(ctx, plan) {
     }
     ts.forEachChild(node, visit);
   }(ctx.sourceFile));
+
+  // The sets are keyed by bare name, so a name the file also binds for its own
+  // sake is not proof of anything; withdraw it and let the usual flag ask.
+  const ambiguous = collectAmbiguousNames(ctx.sourceFile);
+  for (const set of Object.values(sets)) {
+    for (const name of ambiguous) set.delete(name);
+  }
+}
+
+/**
+ * Names the file binds for their own sake: a `const`/`let`/`var`, a function, a
+ * class, an import. A prop typed `ButtonProps['variant']` only proves the
+ * migrated vocabulary when the identifier handed on can be nothing but that
+ * prop, and `const tone = 'primary'` next to `interface P { tone?: ... }`
+ * breaks that. Parameters -- and the members destructured out of them -- are
+ * the prop itself, so they are deliberately not collected here.
+ */
+function collectAmbiguousNames(sourceFile) {
+  const names = new Set();
+
+  const addBinding = (name) => {
+    if (ts.isIdentifier(name)) {
+      names.add(name.text);
+      return;
+    }
+    if (!ts.isObjectBindingPattern(name) && !ts.isArrayBindingPattern(name)) return;
+    for (const element of name.elements) {
+      if (ts.isBindingElement(element)) addBinding(element.name);
+    }
+  };
+
+  (function visit(node) {
+    if (ts.isVariableDeclaration(node)) addBinding(node.name);
+    else if ((ts.isFunctionDeclaration(node) || ts.isClassDeclaration(node)) && node.name) {
+      names.add(node.name.text);
+    } else if ((ts.isImportSpecifier(node) || ts.isImportClause(node) || ts.isNamespaceImport(node))
+      && node.name) {
+      names.add(node.name.text);
+    }
+    ts.forEachChild(node, visit);
+  }(sourceFile));
+
+  return names;
 }
 
 function isButtonPropsLookup(node, buttonPropsLocals) {
